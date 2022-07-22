@@ -13,6 +13,10 @@ function add(int n1, int n2) {
     return n1 + n2;
 }
 
+if ( number1 == 1) {
+    number1 ++
+};
+
 int result = add(number1, number2);
 
 print(result);
