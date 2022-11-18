@@ -1,5 +1,3 @@
-#Comment
-
 /* Comment */
 
 // Comment
@@ -7,6 +5,8 @@
 int number1 = 1;
 
 int number2 = 2;
+
+using System;
 
 
 function add(int n1, int n2) {
@@ -19,4 +19,4 @@ if ( number1 == 1) {
 
 int result = add(number1, number2);
 
-print(result);
+print("String");
