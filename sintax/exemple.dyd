@@ -1,22 +1,197 @@
-/* Comment */
+#Comment
+
+#Asignment
+int number1 = 1;
+
+#Asignment
+int number2 = 2;
+
+#Import package
+using System;
+
+#Function
+function add(int n1, int n2) {
+    return n1 + n2;
+}
+
+#If statement
+if ( number1 == 1) {
+    number1 ++
+};
+
+#for loop
+for (int i = 0; i < 10; i++) {
+    Console.WriteLine(i);
+}
+
+#do while loop
+do{
+    Console.WriteLine("Hello");
+} while (number1 == 1);
+
+#while loop
+while (number1 == 1) {
+    Console.WriteLine("Hello");
+}
+
+#Asignment for a function
+int result = add(number1, number2);
+
+#Using a function / method
+print("String");
+
+
+------------------------------------------------------
+
+Keyworlds
+
+int
+string
+bool
+float
+double
+char
+void
+null
+true
+false
+if
+else
+for
+while
+do
+return
+using
+function
+class
+new
+this
+static
+public
+private
+try
+catch
+throw
+in
+interface
+
+
+Objects keyworlds:
+
+class
+new
+this
+static
+public
+private
+interface
+
+Procedure keyworlds:
+
+function
+return
+void
+try
+catch
+throw
+in
+int
+string
+bool
+float
+double
+char
+void
+null
+true
+false
+if
+else
+for
+while
+do
+using
+
+------------------------------------------------------
+
+Data types
+
+int
+string
+bool
+float
+double
+char
+
+------------------------------------------------------
+
+Operators
+
++ - * / % ++ --
+== != > < >= <=
+&& || !
+= += -= *= /= %=
+
+------------------------------------------------------
+
+Comments
 
 // Comment
 
-int number1 = 1;
+/*
+Comment
+*/
 
-int number2 = 2;
+------------------------------------------------------
 
-using System;
-
+Functions
 
 function add(int n1, int n2) {
     return n1 + n2;
 }
 
+------------------------------------------------------
+
+Control flow
+
 if ( number1 == 1) {
     number1 ++
 };
 
-int result = add(number1, number2);
+for (int i = 0; i < 10; i++) {
+    Console.WriteLine(i);
+}
+
+do{
+    Console.WriteLine("Hello");
+} while (number1 == 1);
+
+while (number1 == 1) {
+    Console.WriteLine("Hello");
+}
+
+------------------------------------------------------
+
+Asignment
+
+int number1 = 1;
+
+------------------------------------------------------
+
+Import package
+
+using System;
+
+------------------------------------------------------
+
+Using a function / method
 
 print("String");
+
+------------------------------------------------------
+
+Using a function in object
+
+Console.writeLine("String");
+
+------------------------------------------------------
