@@ -1,0 +1,13 @@
+a = 5;
+do
+    ++a;
+while (a < 10);
+
+square = function(x) {
+    x * x;
+};
+
+x = cos(PI) * -5;
+ConsoleWrite(x + '² = ' + square(x));
+
+
