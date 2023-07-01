@@ -231,7 +231,7 @@ var interpreter = (function () {
 		}
 		return (undefined); // If the variable is not found, return undefined
     }
-
+ 
     function pushScope() { // Push a new scope onto the scope stack
 		_scopeStack.push({}); // Push a new scope
 		_this = _scopeStack[_scopeStack.length - 1]; // Set the current scope to the new scope
