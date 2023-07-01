@@ -82,27 +82,27 @@ var lexeme_list = [
 ];
 
 function lexer(stream) {
-    var lexemes = [];
-    var line = 0;
+    var lexemes = []; // {name, val, line} list of lexemes
+    var line = 0; // Current line
 
-    while (stream) {
-	var match = null;
-	if ((match = stream.match(/^[ \t\v\f]+/))) { /* Do nothing  */ } 
-    else if ((match = stream.match(/^[\r\n]+/))) {
-	    lexemes.push({name:"LX_NEWLINE", line:line});
-	    line += match[0].length;
-	}
-	for (var i = 0; !match && i < lexeme_list.length; i++) {
-	    if ((match = stream.match(RegExp("^(" + lexeme_list[i].rx + ")"))))
-		lexemes.push({name:lexeme_list[i].name, val:match[0], line:line});
-	}
-	if (match)
-	    stream = stream.substring(match[0].length);
-	else if ((match = stream.match(/^\S+/))) {
-	    console.error("Unknown lexeme: " + match[0]);
-	    stream = stream.substring(match[0].length);
-	} else
-	    break;
+    while (stream) { // While there is something to parse
+        var match = null; // Matched lexeme
+        if ((match = stream.match(/^[ \t\v\f]+/))) { /* Do nothing  */ }  // Skip whitespace
+        else if ((match = stream.match(/^[\r\n]+/))) { // Newline
+            lexemes.push({name:"LX_NEWLINE", line:line}); // Add newline lexeme
+            line += match[0].length; // Increment line
+        }
+        for (var i = 0; !match && i < lexeme_list.length; i++) { // For each lexeme in the list (in order) until one matches or we run out
+            if ((match = stream.match(RegExp("^(" + lexeme_list[i].rx + ")")))) // If the lexeme matches the stream (from the start)
+            lexemes.push({name:lexeme_list[i].name, val:match[0], line:line}); // Add the lexeme to the list of lexemes 
+        }
+        if (match) // If we matched a lexeme (and didn't run out of lexemes)
+            stream = stream.substring(match[0].length); // Remove the lexeme from the stream (so we don't match it again)
+        else if ((match = stream.match(/^\S+/))) { // If we didn't match a lexeme, but there is something there (not whitespace)
+            console.error("Unknown lexeme: " + match[0]); // Error out (unknown lexeme) 
+            stream = stream.substring(match[0].length); // Remove the lexeme from the stream (so we don't match it again)
+        } else // If we didn't match a lexeme and there is nothing there (end of stream)
+            break;
     }
     return (lexemes);
 }

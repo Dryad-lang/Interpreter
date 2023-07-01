@@ -1,10 +1,13 @@
 "use strict";
 
 var interpreter = (function () {
-    var _scopeStack = [];
-    var _this;
-    var _super;
-    var _funcs = {LX_PLUS: function(c) { return (interpretExpr(c[0]) + interpretExpr(c[1])); },
+    var _scopeStack = []; // Stack of scopes
+    var _this;	
+    var _super; 
+    var _funcs = {
+
+		// Math functions
+		  LX_PLUS: function(c) { return (interpretExpr(c[0]) + interpretExpr(c[1])); },
 		  LX_MINUS: function(c) { return (interpretExpr(c[0]) - interpretExpr(c[1])); },
 		  LX_POW: function(c) { return (Math.pow(interpretExpr(c[0]), interpretExpr(c[1]))); },
 		  LX_MULT: function(c) { return (interpretExpr(c[0]) * interpretExpr(c[1])); },
@@ -13,6 +16,7 @@ var interpreter = (function () {
 		  LX_INC: function(c) { return (setValue(c[0].val, getValue(c[0].val) + 1)); },
 		  LX_DEC: function(c) { return (setValue(c[0].val, getValue(c[0].val) - 1)); },
 
+		// Bitwise functions
 		  LX_OR: function(c) { return (interpretExpr(c[0]) | interpretExpr(c[1])); },
 		  LX_XOR: function(c) { return (interpretExpr(c[0]) ^ interpretExpr(c[1])); },
 		  LX_AND: function(c) { return (interpretExpr(c[0]) & interpretExpr(c[1])); },
@@ -20,6 +24,7 @@ var interpreter = (function () {
 		  LX_LSHIFT: function(c) { return (interpretExpr(c[0]) << interpretExpr(c[1])); },
 		  LX_RSHIFT: function(c) { return (interpretExpr(c[0]) >> interpretExpr(c[1])); },
 
+		// Boolean functions / comparisons
 		  LX_EQ: function(c) { return (interpretExpr(c[0]) == interpretExpr(c[1])); },
 		  LX_NEQ: function(c) { return (interpretExpr(c[0]) != interpretExpr(c[1])); },
 		  LX_LT: function(c) { return (interpretExpr(c[0]) < interpretExpr(c[1])); },
@@ -27,6 +32,7 @@ var interpreter = (function () {
 		  LX_GT: function(c) { return (interpretExpr(c[0]) > interpretExpr(c[1])); },
 		  LX_GE: function(c) { return (interpretExpr(c[0]) >= interpretExpr(c[1])); },
 
+		// Assignment functions
 		  LX_ASSIGN: function(c) { return (setValue(c[0].val, interpretExpr(c[1]))); },
 		  LX_PLUSSET: function(c) { return (setValue(c[0].val, getValue(c[0].val) + interpretExpr(c[1]))); },
 		  LX_MINUSSET: function(c) { return (setValue(c[0].val, getValue(c[0].val) - interpretExpr(c[1]))); },
@@ -38,6 +44,7 @@ var interpreter = (function () {
 		  LX_XORSET: function(c) { return (setValue(c[0].val, getValue(c[0].val) ^ interpretExpr(c[1]))); },
 		  LX_LSHIFTSET: function(c) { return (setValue(c[0].val, getValue(c[0].val) << interpretExpr(c[1]))); },
 		  LX_RSHIFTSET: function(c) { return (setValue(c[0].val, getValue(c[0].val) >> interpretExpr(c[1]))); },
+
 
 		  LX_LNOT: function(c) { return (0 + !interpretExpr(c[0])); },
 		  LX_LOR: function(c) {
@@ -89,7 +96,6 @@ var interpreter = (function () {
 		      }
 		      return (val);
 		  },
-
 		  LX_IF: function(c) {
 		      if (interpretExpr(c[0]))
 			  return (interpretExpr(c[1]));
@@ -122,15 +128,25 @@ var interpreter = (function () {
 		  }
 		 }
 
+	// Interpret an expression
     function interpreter(ast, externals) {
 		if (!ast)
 			return (null);
+
+		// Initialize the interpreter
 		pushScope();
+
+		// Define external functions
 		defineBuiltins(externals);
+
+		// Interpret the AST
 		return (interpretExpr(ast));
     }
 
+	// Define built-in functions
     function defineBuiltins(externals) {
+
+	// Built-in functions this basically just defines the global functions that are built into the language
 	_this.cos = Math.cos;
 	_this.acos = Math.acos;
 	_this.sin = Math.sin;
@@ -174,50 +190,61 @@ var interpreter = (function () {
 		}
     }
 
+	// Interpret an expression
     function interpretExpr(ast) {
-	if (["LX_NUMBER", "LX_STRING"].indexOf(ast.name) != -1)
-	    return (ast.val);
-	if (ast.name == "LX_ID")
-	    return (getValue(ast.val));
-	if (ast.name == "LX_FUNC")
-	    return (ast);
-	if (_funcs[ast.name])
-	    return (_funcs[ast.name](ast.children));
-	return (null);
+
+		// If the ast is number or string, return it
+		if (["LX_NUMBER", "LX_STRING"].indexOf(ast.name) != -1)
+			return (ast.val);
+			
+		// If the ast is an identifier, return its value
+		if (ast.name == "LX_ID")
+			return (getValue(ast.val));
+		
+		// If the ast is a function call, call it
+		if (ast.name == "LX_FUNC")
+			return (ast);
+
+		// If the ast is a function definition, define it
+		if (_funcs[ast.name])
+			return (_funcs[ast.name](ast.children));
+
+		// Return null if the ast is null
+		return (null);
     }
 
     function setValue(name, val) {
-	for (var i = _scopeStack.length - 1; i >= 0; i--) {
-	    if (_scopeStack[i][name] != undefined) {
-		_scopeStack[i][name] = val;
-		return (val);
-	    }
-	}
-	_this[name] = val;
-	return (val);
+		for (var i = _scopeStack.length - 1; i >= 0; i--) {// Search for the variable in the scope stack
+			if (_scopeStack[i][name] != undefined) { // If the variable is found, set it
+			_scopeStack[i][name] = val; // Set the variable
+			return (val); // Return the value
+			}
+		}
+		_this[name] = val; // If the variable is not found, set it in the global scope
+		return (val); // Return the value
     }
 
-    function getValue(name) {
-	for (var i = _scopeStack.length - 1; i >= 0; i--) {
-	    if (_scopeStack[i][name] != undefined)
-		return (_scopeStack[i][name]);
-	}
-	return (undefined);
+    function getValue(name) { // Get the value of a variable
+		for (var i = _scopeStack.length - 1; i >= 0; i--) { // Search for the variable in the scope stack
+			if (_scopeStack[i][name] != undefined) // If the variable is found, return it
+			return (_scopeStack[i][name]); // Return the value
+		}
+		return (undefined); // If the variable is not found, return undefined
     }
 
-    function pushScope() {
-	_scopeStack.push({});
-	_this = _scopeStack[_scopeStack.length - 1];
-	_super = _scopeStack[_scopeStack.length - 2];
+    function pushScope() { // Push a new scope onto the scope stack
+		_scopeStack.push({}); // Push a new scope
+		_this = _scopeStack[_scopeStack.length - 1]; // Set the current scope to the new scope
+		_super = _scopeStack[_scopeStack.length - 2]; // Set the super scope to the previous scope
     }
 
-    function popScope() {
-	_scopeStack.pop();
-	_this = _super;
-	_super = _scopeStack[_scopeStack.length - 2];
+    function popScope() { // Pop the current scope off the scope stack
+		_scopeStack.pop(); // Pop the current scope
+		_this = _super; // Set the current scope to the previous scope
+		_super = _scopeStack[_scopeStack.length - 2]; // Set the super scope to the previous scope
     }
 
-    return (interpreter);
+    return (interpreter); // Return the interpreter
 } ());
 
 module.exports = interpreter;
